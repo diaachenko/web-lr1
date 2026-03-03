@@ -95,11 +95,10 @@ footer {
 
 @media (max-width: 768px) {
     nav a:hover, 
-    .logo:hover .logo-img,
+    .logo:hover, .logo-img,
     button:hover {
         transform: none !important;
         color: #061B38 !important; 
-        background-color: #FCBE3B; 
     }
 
     @keyframes button-pulse {
@@ -146,7 +145,12 @@ footer {
         padding: 2px 0;
     }
 
+    nav a:active {
+        color: #fff !important;
+    }
+
     main {
         padding-top: 150px !important; 
     }
 }
+
