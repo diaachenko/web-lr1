@@ -38,10 +38,6 @@
         gap: 20px;
     }
 
-    .hero-content button:hover a { color: #061B38; } 
-
-    .hero-content button:active a { color: #fff; }
-
     .hero-image img { max-width: 250px; }
     .hero-content h1 { font-size: 2.5rem; }
 
@@ -50,3 +46,4 @@
     }
 
 }
+
