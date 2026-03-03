@@ -47,6 +47,13 @@
 .button-cancel:hover { background-color: #651313; }
 
 @media (max-width: 768px) {
+    .property-card, .property-card-past {
+        flex: 0 1 100% !important;
+    }
+    .cards {
+        padding: 0 20px;
+    }
+
     .property-card:hover,
     .property-card:hover img {
         transform: none !important;
@@ -55,14 +62,10 @@
     }
 
     .property-card:active {
-        transform: scale(0.98);
+        transform: scale(0.98) !important;
         background-color: #f0f0f0 !important;
         transition: 0.1s;
     }
-
-    .cards { grid-template-columns: 1fr; padding: 0 15px; }
-    .search-wrapper { flex-direction: column; }
-    .search-button { width: 100%; }
 
     .button-cancel:hover {
         background-color: #FCBE3B !important;
@@ -74,4 +77,5 @@
         background-color: #651313 !important;
         color: white !important;
         animation: button-pulse 0.3s ease-out;
+
 }
