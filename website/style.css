@@ -23,6 +23,10 @@ nav {
     align-items: center;
 }
 
+.hamburger-menu {
+    display: none;
+}
+
 nav ul {
     display: flex;
     list-style: none;
@@ -47,10 +51,14 @@ nav a:hover {
 }
 
 .logo-img {
-    height: 45px;
+    height: 40px;
     width: auto;
     display: block;
     transition: transform 0.3s ease;
+}
+
+.logo {
+    margin-right: 700px;
 }
 
 .logo:hover .logo-img {
