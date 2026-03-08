@@ -11,12 +11,19 @@ body {
 
 header {
     position: fixed;
+    z-index: 9999;
     background-color: #5AC1C0;    
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 70px;
     width: 100%;
+    transition-duration: 0.4s;
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+}
+
+header.scrolled {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .logo {
@@ -46,7 +53,7 @@ nav ul {
     display: flex;
     list-style: none;
     align-items: right;
-    gap: 40px;
+    gap: 70px;
     margin: 0;
     padding: 0;
 }

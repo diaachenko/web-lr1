@@ -1,5 +1,3 @@
-console.log("scroll.js file loaded at: ", new Date().toLocaleString());
-
 document.addEventListener('DOMContentLoaded', () => {
     const siteLogo = document.getElementById('siteLogo'); 
 
@@ -13,4 +11,4 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-})
+});
