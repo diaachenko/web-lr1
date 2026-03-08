@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-	const siteLogo = document.getElementById('logo');
+	const logo = document.getElementById('logo');
 
     if (logo) {
         logo.addEventListener('click', (event) => {
