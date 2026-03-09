@@ -10,6 +10,7 @@
 
 .property-card, .property-card-past {
     flex: 0 1 calc(33.333% - 20px); 
+    flex-direction: column;
     background: white;
     padding: 20px;
     border-radius: 12px;
@@ -23,6 +24,15 @@
 .property-card:hover {
 	box-shadow: 0 0px 0px rgba(0,0,0,0.05);
   transform: translateY(2px);
+}
+
+details {
+    overflow: hidden;
+    transition-duration: 0.4s;
+}
+
+details p, details ul{
+    margin-top: 10px;
 }
 
 .property-card img, .property-card-past img {
