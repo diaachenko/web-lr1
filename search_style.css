@@ -30,7 +30,7 @@
 }
 
 .property-card {
-    flex: 0 1 calc(33.333% - 20px); 
+    flex: 0 1 calc(33.333% - 20px);
     background: white;
     padding: 20px;
     border-radius: 12px;

@@ -10,12 +10,15 @@
 
 .property-card, .property-card-past {
     flex: 0 1 calc(33.333% - 20px); 
+    display: flex;
+    flex-direction: column;
     background: white;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     box-sizing: border-box;
     transition-duration: 0.4s;
+    height: auto;
 }
 
 .property-card-past { opacity: 0.7; }
@@ -23,6 +26,45 @@
 .property-card:hover {
 	box-shadow: 0 0px 0px rgba(0,0,0,0.05);
   transform: translateY(2px);
+}
+
+summary {
+    list-style: none;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+summary::after {
+    content: '▶';
+    transition: transform 0.4s;
+    font-size: 0.8rem;
+}
+
+details[open] summary::after {
+    transform: rotate(90deg);
+}
+
+.details-container {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s ease-out;
+}
+
+.details-container > div {
+    min-height: 0;
+    overflow: hidden;
+}
+
+details[open] .details-container {
+    grid-template-rows: 1fr;
+}
+
+details.closing .details-container {
+    grid-template-rows: 0fr;
 }
 
 .property-card img, .property-card-past img {
@@ -83,7 +125,3 @@
         color: white !important;
         animation: button-pulse 0.3s ease-out;
 }
-
-
-
-
