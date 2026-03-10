@@ -93,6 +93,8 @@ details.closing .details-container {
 
 .button-cancel:hover { background-color: #651313; }
 
+
+
 @media (max-width: 768px) {
     .property-card, .property-card-past {
         flex: 0 1 100% !important;

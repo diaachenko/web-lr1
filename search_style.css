@@ -58,6 +58,30 @@
     transform: translateY(-3px);
 }
 
+.book-btn {
+    background-color: #FCBE3B;
+    color: #061B38;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    transition-duration: 0.4s;
+}
+
+.book-bth:hover {
+    background-color: #061B38;
+    color: #FFF;
+    transform: translateY(-3px) scale(1.05);
+}
+
+.book-btn.is-booked {
+    background-color: #061B38;
+    color: #FFF;
+    cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
     .search-wrapper {
         display: flex;

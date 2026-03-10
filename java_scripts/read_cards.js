@@ -1,37 +1,62 @@
+const getBookedStatus = () => {
+    const saved = localStorage.getItem('bookedSuites');
+    return saved ? JSON.parse(saved) : {}; 
+};
+
+const saveBookedStatus = (bookedObj) => {
+    localStorage.setItem('bookedSuites', JSON.stringify(bookedObj));
+};
+
+function bookSuite(button, suiteId) {
+    const bookedSuites = getBookedStatus();
+
+    bookedSuites[suiteId] = true;
+    saveBookedStatus(bookedSuites);
+
+    button.classList.add('is-booked');
+    button.textContent = 'Booked';
+    button.disabled = true;
+}
+
 fetch('json/suites.json')
-	.then(response => response.json())
-	.then(data => {
-		const Container = document.getElementById('cards');
+    .then(response => response.json())
+    .then(data => {
+        const container = document.getElementById('cards');
+        const bookedSuites = getBookedStatus();
 
-		if (data.length > 0) {
-			let i = 0;
+        data.forEach((suite) => {
+            const suiteId = suite.id || suite.title;
 
-			do {
-				let card = document.createElement('div');
-				card.className = "property-card";
+            const isBooked = bookedSuites[suiteId] === true || suite.booked === true;
 
-				let featureList = "";
-				for (let j = 0; j < data[i].features.length; j++) {
-					featureList += `<li>${data[i].features[j]}</li>`;
-				}
+            let card = document.createElement('div');
+            card.className = "property-card";
 
+            let featureList = suite.features.map(f => `<li>${f}</li>`).join('');
 
-				card.innerHTML = `
-					<img src="${data[i].image}" alt="${data[i].alt}">
-					<h3>${data[i].title}</h3>
-					<h5>${data[i].price}</h5>
-					<details>
-						<summary>Details</summary>
-						<p>${data[i].description}</p>
-						<ul>${featureList}</ul>
-					</details><br>
-					<button>Book</button>
-				`;
-
-				Container.appendChild(card);
-
-				i++;
-			} while (i < data.length);
-		}
-	})
-	.catch(error => console.error('Error:', error));
+            card.innerHTML = `
+                <img src="${suite.image}" alt="${suite.alt}">
+                <h3>${suite.title}</h3>
+                <h5>${suite.price}</h5>
+	            <div class="details-wrapper">    
+	                <details>
+	                    <summary>Details</summary>
+	                    <div class="details-content">
+	                        <div>
+	                            <p>${suite.description}</p>
+	                            <ul>${featureList}</ul>
+	                        </div>
+	                    </div>
+	                </details><br>
+            	</div>
+                <button 
+                    class="book-btn ${isBooked ? 'is-booked' : ''}" 
+                    ${isBooked ? 'disabled' : ''} 
+                    onclick="bookSuite(this, '${suiteId}')">
+                    ${isBooked ? 'Booked' : 'Book'}
+                </button>
+            `;
+            container.appendChild(card);
+        });
+    })
+    .catch(error => console.error('Error:', error));
