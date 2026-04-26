@@ -1,4 +1,4 @@
-name: Deploy Static Website
+name: Deploy React Website
 
 on:
   push:
@@ -17,13 +17,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Git User
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "github-actions@github.com"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        working-directory: ./homelend-react
+        run: npm install
+
+      - name: Build project
+        working-directory: ./homelend-react
+        run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./website
+          publish_dir: ./homelend-react/dist
