@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { collection, getDocs, doc, setDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, setDoc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { db, auth } from './firebase';
 
@@ -12,19 +12,36 @@ import Search from './pages/Search';
 import Bookings from './pages/Bookings';
 import Contacts from './pages/Contacts';
 import Auth from './pages/Auth';
+import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
   const [suites, setSuites] = useState([]);
   const [bookedSuites, setBookedSuites] = useState({});
   const [user, setUser] = useState(null);
 
-  // Слухач авторизації
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => setUser(currentUser));
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      
+      if (currentUser) {
+        try {
+          const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+          if (userDoc.exists() && userDoc.data().bookings) {
+            setBookedSuites(userDoc.data().bookings);
+          } else {
+            setBookedSuites({});
+          }
+        } catch (error) {
+          console.error("Помилка завантаження бронювань користувача:", error);
+        }
+      } else {
+        setBookedSuites({});
+      }
+    });
+    
     return () => unsubscribe();
   }, []);
 
-  // Завантаження даних з бази Firebase
   useEffect(() => {
     const fetchSuites = async () => {
       try {
@@ -34,12 +51,8 @@ export default function App() {
       } catch (err) { console.error("Firebase fetch error:", err); }
     };
     fetchSuites();
-
-    const saved = localStorage.getItem('bookedSuites');
-    if (saved) setBookedSuites(JSON.parse(saved));
   }, []);
 
-  // Завантаження початкових даних (кнопка зникне, коли база не порожня)
   const seedDatabase = async () => {
     try {
       const res = await fetch('/suites.json');
@@ -49,14 +62,26 @@ export default function App() {
     } catch (err) { console.error(err); }
   };
 
-  const toggleBooking = (suiteId) => {
-    setBookedSuites(prev => {
-      const updated = { ...prev };
-      if (updated[suiteId]) delete updated[suiteId];
-      else updated[suiteId] = true;
-      localStorage.setItem('bookedSuites', JSON.stringify(updated));
-      return updated;
-    });
+  const toggleBooking = async (suiteId) => {
+    if (!user) {
+      alert("Please login to book a suite!");
+      return;
+    }
+
+    const updatedBookings = { ...bookedSuites };
+    if (updatedBookings[suiteId]) {
+      delete updatedBookings[suiteId];
+    } else {
+      updatedBookings[suiteId] = true;
+    }
+
+    setBookedSuites(updatedBookings);
+
+    try {
+      await setDoc(doc(db, "users", user.uid), { bookings: updatedBookings }, { merge: true });
+    } catch (error) {
+      console.error("Помилка збереження бронювання у Firebase:", error);
+    }
   };
 
   return (
@@ -71,7 +96,14 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<Search suites={suites} bookedSuites={bookedSuites} toggleBooking={toggleBooking} user={user} />} />
-        <Route path="/bookings" element={<Bookings suites={suites} bookedSuites={bookedSuites} toggleBooking={toggleBooking} user={user} />} />
+        
+        {/* Захищений маршрут: сюди потраплять тільки залогінені користувачі */}
+        <Route path="/bookings" element={
+          <ProtectedRoute user={user}>
+            <Bookings suites={suites} bookedSuites={bookedSuites} toggleBooking={toggleBooking} user={user} />
+          </ProtectedRoute>
+        } />
+        
         <Route path="/contacts" element={<Contacts />} />
         <Route path="/auth" element={<Auth />} />
       </Routes>
